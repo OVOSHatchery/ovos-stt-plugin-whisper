@@ -1,5 +1,6 @@
 import speech_recognition as sr
 from ovos_plugin_manager.templates.stt import STT
+from whisper.tokenizer import LANGUAGES
 
 
 class WhisperSTT(STT):
@@ -9,10 +10,12 @@ class WhisperSTT(STT):
 
     def execute(self, audio, language=None):
         lang = language or self.lang
-        l1, l2 = lang.split("-")
-        lang = f"{l1.lower()}-{l2.upper()}"
+        lang = lang.split("-")[0]
         utt = self.recognizer.recognize_whisper(audio, language=lang)
         return utt
+
+    def available_languages(self) -> set:
+        return set(LANGUAGES.keys())
 
 
 WhisperSTTConfig = {}
